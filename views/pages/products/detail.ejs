@@ -56,7 +56,8 @@
                             <div class="stars">
                                 <%- helpers.generateStarRating(product.rating) %>
                             </div>
-                            <span class="rating-value"><%= product.rating %> (${Math.floor(Math.random() * 100) + 50} değerlendirme)</span>
+                            <!-- HATA DÜZELTMESİ: Rastgele sayı yerine veritabanından gelen product.reviewCount alanı kullanıldı -->
+                            <span class="rating-value"><%= product.rating %> (<%= product.reviewCount || 0 %> değerlendirme)</span>
                         </div>
 
                         <div class="product-price">

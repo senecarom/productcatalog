@@ -11,6 +11,7 @@
     ],
     "stock": 15,
     "rating": 4.8,
+    "reviewCount": 215,
     "features": ["A17 Pro Çip", "Titanyum Tasarım", "48MP Ana Kamera", "USB-C"],
     "specifications": {
       "screen": "6.1 inç Super Retina XDR",
@@ -34,6 +35,7 @@
     ],
     "stock": 12,
     "rating": 4.7,
+    "reviewCount": 189,
     "features": ["AI Özellikleri", "S Pen", "200MP Kamera", "Snapdragon 8 Gen 3"],
     "specifications": {
       "screen": "6.8 inç Dynamic AMOLED 2X",
@@ -57,6 +59,7 @@
     ],
     "stock": 8,
     "rating": 4.9,
+    "reviewCount": 98,
     "features": ["M3 Çip", "13.6 inç Liquid Retina", "18 Saat Pil", "macOS"],
     "specifications": {
       "screen": "13.6 inç Liquid Retina",
@@ -80,6 +83,7 @@
     ],
     "stock": 25,
     "rating": 4.5,
+    "reviewCount": 450,
     "features": ["Air Max Teknolojisi", "Nefes Alabilir Tasarım", "Hafif"],
     "specifications": {
       "material": "Mesh ve Deri",
@@ -103,6 +107,7 @@
     ],
     "stock": 18,
     "rating": 4.6,
+    "reviewCount": 320,
     "features": ["Boost Teknolojisi", "Primeknit Üst", "Torsion Sistemi"],
     "specifications": {
       "material": "Primeknit",
@@ -126,6 +131,7 @@
     ],
     "stock": 10,
     "rating": 4.3,
+    "reviewCount": 677,
     "features": ["Ergonomik Tasarım", "Ayarlanabilir Kolçaklar", "Mesh Sırt"],
     "specifications": {
       "material": "Mesh ve Polyester",
@@ -149,6 +155,7 @@
     ],
     "stock": 6,
     "rating": 4.4,
+    "reviewCount": 130,
     "features": ["4K Ultra HD", "Android TV", "HDR10+", "Dolby Atmos"],
     "specifications": {
       "screen": "65 inç",
@@ -172,6 +179,7 @@
     ],
     "stock": 30,
     "rating": 4.2,
+    "reviewCount": 85,
     "features": ["Profesyonel Set", "Online Ders Erişimi", "Hafif Malzeme"],
     "specifications": {
       "contents": "2 Adet Zumba Maracas",
@@ -195,6 +203,7 @@
     ],
     "stock": 50,
     "rating": 4.7,
+    "reviewCount": 1120,
     "features": ["Çok Satan Roman", "Film Uyarlaması", "Mizahi Dil"],
     "specifications": {
       "author": "Kevin Kwan",
@@ -218,6 +227,7 @@
     ],
     "stock": 20,
     "rating": 4.8,
+    "reviewCount": 142,
     "features": ["Always-On Display", "ECG", "Kan Oksijen Ölçümü", "GPS"],
     "specifications": {
       "screen": "45 mm Retina",
