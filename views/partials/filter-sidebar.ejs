@@ -9,15 +9,17 @@
     <div class="filter-group">
         <h4 class="filter-group-title">Kategori</h4>
         <div class="filter-options">
+            <!-- HATA DÜZELTMESİ: Gereksiz "/products?" öneki kaldırıldı -->
             <a 
-                href="/products?<%= helpers.buildPaginationUrl('/products', { ...filters, category: 'all' }, 1) %>" 
+                href="<%= helpers.buildPaginationUrl('/products', { ...filters, category: 'all' }, 1) %>" 
                 class="filter-option <%= !filters.category || filters.category === 'all' ? 'active' : '' %>"
             >
                 Tüm Kategoriler
             </a>
             <% categories.forEach(function(category) { %>
+                <!-- HATA DÜZELTMESİ: Gereksiz "/products?" öneki kaldırıldı -->
                 <a 
-                    href="/products?<%= helpers.buildPaginationUrl('/products', { ...filters, category: category.slug }, 1) %>" 
+                    href="<%= helpers.buildPaginationUrl('/products', { ...filters, category: category.slug }, 1) %>" 
                     class="filter-option <%= filters.category === category.slug ? 'active' : '' %>"
                 >
                     <%= category.name %>
@@ -28,6 +30,7 @@
 
     <div class="filter-group">
         <h4 class="filter-group-title">Fiyat Aralığı</h4>
+        <!-- Not: Bu form JS (filters.js) ile çalıştığı için zaten düzgün çalışıyordu -->
         <form class="price-filter-form" id="priceFilterForm">
             <div class="price-inputs">
                 <input 
@@ -54,8 +57,9 @@
         <h4 class="filter-group-title">Değerlendirme</h4>
         <div class="filter-options">
             <% [4, 3, 2, 1].forEach(function(rating) { %>
+                <!-- HATA DÜZELTMESİ: Gereksiz "/products?" öneki kaldırıldı -->
                 <a 
-                    href="/products?<%= helpers.buildPaginationUrl('/products', { ...filters, rating: rating }, 1) %>" 
+                    href="<%= helpers.buildPaginationUrl('/products', { ...filters, rating: rating }, 1) %>" 
                     class="filter-option rating-option <%= filters.rating == rating ? 'active' : '' %>"
                 >
                     <div class="stars">
@@ -76,8 +80,9 @@
     <div class="filter-group">
         <h4 class="filter-group-title">Stok Durumu</h4>
         <div class="filter-options">
+            <!-- HATA DÜZELTMESİ: Gereksiz "/products?" öneki kaldırıldı -->
             <a 
-                href="/products?<%= helpers.buildPaginationUrl('/products', { ...filters, inStock: 'true' }, 1) %>" 
+                href="<%= helpers.buildPaginationUrl('/products', { ...filters, inStock: 'true' }, 1) %>" 
                 class="filter-option <%= filters.inStock === 'true' ? 'active' : '' %>"
             >
                 Stokta Olanlar
@@ -91,8 +96,9 @@
         <h4 class="filter-group-title">Marka</h4>
         <div class="filter-options">
             <% brands.forEach(function(brandItem) { %>
+                <!-- HATA DÜZELTMESİ: Gereksiz "/products?" öneki kaldırıldı -->
                 <a 
-                    href="/products?<%= helpers.buildPaginationUrl('/products', { ...filters, brand: brandItem }, 1) %>" 
+                    href="<%= helpers.buildPaginationUrl('/products', { ...filters, brand: brandItem }, 1) %>" 
                     class="filter-option <%= filters.brand === brandItem ? 'active' : '' %>"
                 >
                     <%= brandItem %>
@@ -106,8 +112,9 @@
         <h4 class="filter-group-title">Sıralama</h4>
         <div class="filter-options">
             <% Object.keys(sortOptions).forEach(function(key) { %>
+                <!-- HATA DÜZELTMESİ: Gereksiz "/products?" öneki kaldırıldı -->
                 <a 
-                    href="/products?<%= helpers.buildPaginationUrl('/products', { ...filters, sort: key.toLowerCase() }, 1) %>" 
+                    href="<%= helpers.buildPaginationUrl('/products', { ...filters, sort: key.toLowerCase() }, 1) %>" 
                     class="filter-option <%= currentSort === key.toLowerCase() ? 'active' : '' %>"
                 >
                     <%= sortOptions[key].label %>
