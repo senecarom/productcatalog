@@ -1,13 +1,11 @@
 // Filter module for product filtering functionality
 
-// HATA 4 DÜZELTMESİ: Fonksiyonu export et
 export const initFilters = () => {
-    const priceFilterForm = document.getElementById('priceFilterForm'); // ID ile seçmek daha güvenli
-    // Diğer filtre formları veya seçenekleri için benzer seçiciler eklenebilir.
-    const filterOptions = document.querySelectorAll('.filter-option'); // Kategoriler, rating, stok vb. linkleri
+    const priceFilterForm = document.getElementById('priceFilterForm');
+    const filterOptions = document.querySelectorAll('.filter-option');
     const clearFiltersBtn = document.querySelector('.clear-filters');
     const filterTags = document.querySelectorAll('.filter-tag-remove');
-    const sortSelect = document.querySelector('[data-sort-select]'); // Sıralama için ayrı bir select kullanılıyorsa
+    const sortSelect = document.querySelector('[data-sort-select]');
 
     // Price filter form submission
     if (priceFilterForm) {
@@ -15,78 +13,54 @@ export const initFilters = () => {
             e.preventDefault();
 
             const formData = new FormData(this);
-            const params = new URLSearchParams(window.location.search); // Mevcut URL parametrelerini al
+            const params = new URLSearchParams(window.location.search);
 
-            // Fiyat parametrelerini ayarla veya kaldır
             const minPrice = formData.get('minPrice').trim();
             const maxPrice = formData.get('maxPrice').trim();
 
             if (minPrice) params.set('minPrice', minPrice); else params.delete('minPrice');
             if (maxPrice) params.set('maxPrice', maxPrice); else params.delete('maxPrice');
 
-            params.delete('page'); // Fiyat filtresi değişince 1. sayfaya dön
-
-            // Navigate to filtered URL
+            params.delete('page');
             window.location.href = `/products?${params.toString()}`;
         });
     }
 
-    // Filter options (links) click handling (Category, Rating, Stock, Brand)
+    // Filter options (links) click handling
     filterOptions.forEach(optionLink => {
         optionLink.addEventListener('click', function(e) {
-            // Prevent default link behavior, navigation is handled by href already.
-            // We might add loading indicators here if needed in the future.
-            // Example: Show a spinner while the page reloads.
+            // Link behavior handles navigation
         });
     });
 
-
-    // Real-time search debouncing (Header'daki arama için)
-    const searchForm = document.querySelector('.search-form'); // Header'daki form
+    // DÜZELTME: Arama Fonksiyonelliği (Debounce Kaldırıldı)
+    const searchForm = document.querySelector('.search-form');
     const searchInput = searchForm ? searchForm.querySelector('input[name="q"]') : null;
 
     if (searchForm && searchInput) {
-        // Debounce fonksiyonunu ProductCatalog global nesnesinden al (main.js'de tanımlı varsayılır)
-        // Eğer main.js'de tanımlı değilse, bu dosyaya kopyalanabilir.
-        const debouncedSearch = window.ProductCatalog?.debounce((value) => {
-            // Arama sayfasının URL'ini kullan
-            const searchURL = new URL('/products/search', window.location.origin);
-            const params = searchURL.searchParams;
-
-            if (value.length >= 2) {
-                params.set('q', value);
-                // Mevcut diğer filtreleri de arama sayfasına taşıyabiliriz (isteğe bağlı)
-                // const currentParams = new URLSearchParams(window.location.search);
-                // currentParams.forEach((val, key) => {
-                //     if (key !== 'q' && key !== 'page') params.set(key, val);
-                // });
-                window.location.href = searchURL.toString();
-            } else if (value.length === 0 && window.location.pathname.includes('/search')) {
-                // Arama temizlendiğinde ürünler sayfasına dön
-                 window.location.href = '/products';
-            }
-            // 2 karakterden azsa bir şey yapma (veya bir mesaj göster)
-
-        }, 400); // 400ms bekleme süresi
-
-        // Submit olayını engelle, debounce halledecek
+        // 'input' event listener'ı kaldırıldı (yazarken otomatik arama iptal)
+        
+        // Sadece form gönderildiğinde (Enter veya Buton) çalışır
         searchForm.addEventListener('submit', (e) => {
-             e.preventDefault();
-             // İsteğe bağlı: Enter'a basıldığında debounce'u tetikle veya hemen gönder
-             debouncedSearch(searchInput.value.trim());
-        });
-
-        searchInput.addEventListener('input', (e) => {
-            debouncedSearch(e.target.value.trim());
+             const value = searchInput.value.trim();
+             
+             // Eğer input boşsa göndermeyi engelle
+             if (value.length === 0) {
+                 e.preventDefault();
+                 // ui.js içindeki düzenleme sayesinde buton "İşleniyor..."da kalmayacak
+                 return;
+             }
+             
+             // Eğer doluysa standart form gönderimine izin ver
+             // Tarayıcı action="/products/search" adresine yönlendirecek
         });
     }
-
 
     // Clear all filters button
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.location.href = '/products'; // Sadece ürünler sayfasına yönlendir
+            window.location.href = '/products';
         });
     }
 
@@ -94,18 +68,15 @@ export const initFilters = () => {
     filterTags.forEach(tag => {
         tag.addEventListener('click', function() {
             const filterType = this.dataset.filterType;
-            // const filterValue = this.dataset.filterValue; // Değere gerek yok, sadece tipi sil
-
             const params = new URLSearchParams(window.location.search);
             params.delete(filterType);
-            params.delete('page'); // Filtre kaldırılınca 1. sayfaya dön
-
+            params.delete('page');
             window.location.href = `/products?${params.toString()}`;
         });
     });
 
-    // Sıralama (Eğer ui.js yerine burada yönetilecekse)
-    if (sortSelect && !window.initUI) { // initUI yoksa veya sıralama buradaysa
+    // Sorting
+    if (sortSelect) { 
          sortSelect.addEventListener('change', function() {
             const sortValue = this.value;
             const params = new URLSearchParams(window.location.search);
@@ -116,21 +87,15 @@ export const initFilters = () => {
         });
     }
 
-
-    // Mobile filter toggle (Eğer varsa)
+    // Mobile filter toggle
     const mobileFilterToggle = document.querySelector('[data-mobile-filter-toggle]');
     const filterSidebar = document.querySelector('.filter-sidebar');
 
     if (mobileFilterToggle && filterSidebar) {
         mobileFilterToggle.addEventListener('click', () => {
             filterSidebar.classList.toggle('mobile-open');
-             // Body scroll'u engelleme gibi eklemeler yapılabilir
         });
-        // Kapatma butonu veya dışarı tıklama eklenebilir
     }
 
     console.log('✅ Filters module initialized');
 };
-
-// HATA 4 DÜZELTMESİ: window global ataması kaldırıldı.
-// window.initFilters = initFilters;
