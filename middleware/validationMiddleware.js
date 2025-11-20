@@ -1,6 +1,8 @@
 // Veritabanı modellerini içe aktar
 const Category = require('../models/Category');
 const Product = require('../models/Product');
+// DÜZELTME: SORT_OPTIONS import edildi
+const { APP_CONSTANTS, SORT_OPTIONS } = require('../config/constants');
 
 // Ürün validasyon middleware'i
 const validateProduct = async (req, res, next) => {
@@ -47,9 +49,6 @@ const validateProduct = async (req, res, next) => {
   if (errors.length > 0) {
     try {
       // Kategorileri getir (formu tekrar render etmek için)
-      // Not: Burası N+1 değil çünkü sadece kategorileri çekiyor, sayıları değil.
-      // HATA 5'i düzeltmek için bu satır daha sonra kaldırılabilir,
-      // ancak şimdilik HATA 1'e odaklanıyoruz.
       const categories = await Category.getAll();
 
       const viewName = req.method === 'POST' ? 'new' : 'edit';
@@ -58,8 +57,8 @@ const validateProduct = async (req, res, next) => {
       return res.status(400).render(`pages/products/${viewName}`, {
         title,
         product: req.body,
-        categories, // Bu satır HATA 5'te ele alınacak
-        constants: require('../config/constants').APP_CONSTANTS,
+        categories, 
+        constants: APP_CONSTANTS,
         errors
       });
     } catch (error) {
@@ -92,14 +91,12 @@ const validateCategory = async (req, res, next) => {
   if (errors.length > 0) {
     try {
       // HATA 1 DÜZELTMESİ: N+1 sorgu problemi düzeltildi.
-      // Formu hata ile tekrar render ederken ürün sayılarını
-      // tek bir aggregation sorgusuyla getiriyoruz.
       const categoriesWithCounts = await Category.getAllWithProductCounts();
 
       return res.status(400).render('pages/categories/list', {
         title: 'Kategoriler',
         categories: categoriesWithCounts,
-        constants: require('../config/constants').APP_CONSTANTS,
+        constants: APP_CONSTANTS,
         errors
       });
     } catch (error) {
@@ -118,30 +115,23 @@ const validateCategory = async (req, res, next) => {
 const validateSearchQuery = (req, res, next) => {
   const { q } = req.query;
 
-  // HATA DÜZELTİLDİ: 'q' boşsa 'undefined' değil, boş string'dir.
-  // Not: Bu hata raporda yoktu ancak kodda fark edildi.
   if (!q) {
-      return next(); // Sorgu yoksa devam et (veya ana ürünler sayfasına yönlendir)
+      return next(); 
   }
 
   if (q && q.length < 2) {
-    // Hata durumunda, view'ın ihtiyaç duyduğu temel değişkenleri (örn. categories)
-    // 'res.locals' üzerinden almasını bekleriz.
     return res.status(400).render('pages/products/list', {
       title: 'Arama Sonuçları',
       products: [],
       pagination: { page: 1, limit: 12, total: 0, pages: 0 },
       searchQuery: q,
       errors: ['Arama terimi en az 2 karakter olmalıdır'],
-      constants: require('../config/constants').APP_CONSTANTS,
-      // Not: 'categories' ve 'brands' 'res.locals' üzerinden gelecek
-      // (veya hata durumunda undefined olacak)
-      // Tam bir çözüm için bu view'ın ihtiyaç duyduğu tüm veriler sağlanmalı.
-      // Şimdilik sadece hatayı gösteriyoruz.
+      constants: APP_CONSTANTS,
       filters: {},
       brands: [],
-      sortOptions: {},
-      currentSort: ''
+      // DÜZELTME: sortOptions boş nesne yerine gerçek seçeneklerle dolduruldu
+      sortOptions: SORT_OPTIONS,
+      currentSort: 'newest'
     });
   }
 

@@ -57,7 +57,7 @@ const productController = {
         brands, // Markaları view'a geçir
         filters,
         sortOptions: SORT_OPTIONS,
-        currentSort: sort,
+        currentSort: sort || 'newest',
         constants: APP_CONSTANTS
       });
     } catch (error) {
@@ -72,33 +72,43 @@ const productController = {
   // Arama sonuçları
   searchProducts: async (req, res) => {
     try {
-      const { q: searchQuery, page = 1 } = req.query;
+      const { q: searchQuery, page = 1, sort } = req.query; // Sort parametresi eklendi
 
       if (!searchQuery) {
         return res.redirect('/products');
       }
 
       const filters = { search: searchQuery };
+      
+      // DÜZELTME: Arama yaparken de sıralama seçeneklerini dikkate al
+      let sortOption = SORT_OPTIONS.NEWEST;
+      if (sort && SORT_OPTIONS[sort.toUpperCase()]) {
+        sortOption = SORT_OPTIONS[sort.toUpperCase()];
+      }
+
       const pagination = {
         page: parseInt(page),
         limit: APP_CONSTANTS.ITEMS_PER_PAGE
       };
 
-      const result = await Product.getAll(filters, {}, pagination);
+      const result = await Product.getAll(filters, sortOption, pagination);
 
       // MARKALARI GETİR
       const brands = await Product.getBrands();
       // HATA 4 DÜZELTMESİ: Kategori verisi 'res.locals' aracılığıyla zaten mevcut.
       // const categories = await Category.getAll();
 
+      // DÜZELTME: sortOptions ve currentSort eklendi. Sidebar artık hata vermeyecek.
       res.render('pages/products/list', {
         title: `"${searchQuery}" Arama Sonuçları`,
         products: result.products,
         pagination: result.pagination,
         searchQuery,
-        filters,
-        brands, // Markaları view'a geçir
+        filters, // Filtrelerin arama sayfasında da korunması için
+        brands, 
         // categories, // Kaldırıldı
+        sortOptions: SORT_OPTIONS, // DÜZELTİLDİ: Sidebar için gerekli
+        currentSort: sort || 'newest', // DÜZELTİLDİ: Sidebar için gerekli
         constants: APP_CONSTANTS
       });
     } catch (error) {
@@ -294,4 +304,3 @@ const productController = {
 };
 
 module.exports = productController;
-
