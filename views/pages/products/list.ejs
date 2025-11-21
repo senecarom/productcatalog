@@ -12,19 +12,23 @@
 <body>
     <%- include('../../partials/header') %>
     <%- include('../../partials/navbar') %>
+    
     <main class="main-content">
-        <% if (typeof error !== 'undefined' && error) { %>
-            <div class="alert alert-error"><strong>Hata!</strong> <%= error %></div>
-        <% } %>
-        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
-            <div class="alert alert-error">
-                <strong>Hatalar:</strong>
-                <ul><% errors.forEach(function(error) { %><li><%= error %></li><% }); %></ul>
-            </div>
-        <% } %>
-
         <div class="products-page">
+            <!-- KRİTİK DÜZELTME: Tüm grid yapısı 'container' içine alındı -->
             <div class="container">
+                
+                <!-- Hata Mesajları -->
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="alert alert-error"><strong>Hata!</strong> <%= error %></div>
+                <% } %>
+                <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                    <div class="alert alert-error">
+                        <strong>Hatalar:</strong>
+                        <ul><% errors.forEach(function(error) { %><li><%= error %></li><% }); %></ul>
+                    </div>
+                <% } %>
+
                 <div class="page-header">
                     <h1 class="page-title">
                         <% if (typeof searchQuery !== 'undefined') { %>
@@ -48,7 +52,9 @@
                     </p>
                 </div>
 
-                <div class="products-layout">
+                <!-- Layout Grid (Sidebar + Main) -->
+                <div class="layout-with-sidebar">
+                    
                     <!-- Filter Sidebar -->
                     <div class="products-sidebar">
                         <%- include('../../partials/filter-sidebar', { 
@@ -60,7 +66,7 @@
                         }) %>
                     </div>
 
-                    <!-- Products Grid -->
+                    <!-- Products Grid Area -->
                     <div class="products-main">
                         <% if (products.length === 0) { %>
                             <div class="empty-state">
@@ -72,7 +78,8 @@
                                 <a href="/products" class="btn btn-primary">Tüm Ürünleri Gör</a>
                             </div>
                         <% } else { %>
-                            <div class="products-grid">
+                            <!-- Kart Grid -->
+                            <div class="grid-cards">
                                 <% products.forEach(function(product) { %>
                                     <%- include('../../partials/product-card', { product }) %>
                                 <% }); %>
@@ -87,7 +94,7 @@
                         <% } %>
                     </div>
                 </div>
-            </div>
+            </div> <!-- /container -->
         </div>
     </main>
     <%- include('../../partials/footer') %>

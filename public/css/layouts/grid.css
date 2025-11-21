@@ -1,111 +1,104 @@
-/* Grid Layout System */
+/* MODERN CSS GRID SİSTEMİ */
+
+/* 1. Temel Kapsayıcı (Sayfayı Ortalar) */
+/* Bu sınıf, içeriğin ekranın kenarlarına yapışmasını engeller ve maksimum genişliği sınırlar. */
 .container {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--space-4);
+    max-width: 1200px; /* Maksimum içerik genişliği */
+    margin-left: auto;  /* Sol boşluk otomatik (ortalamak için) */
+    margin-right: auto; /* Sağ boşluk otomatik (ortalamak için) */
+    padding-left: var(--space-4); /* Mobilde kenar boşluğu (safe area) */
+    padding-right: var(--space-4); /* Mobilde kenar boşluğu (safe area) */
 }
 
+/* Container Fluid: Tam genişlik isteyen alanlar için (Örn: Hero Banner) */
 .container-fluid {
     width: 100%;
-    padding: 0 var(--space-4);
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
 }
 
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 calc(-1 * var(--space-3));
-}
-
-.col {
-    flex: 1 0 0%;
-    padding: 0 var(--space-3);
-}
-
-.col-auto {
-    flex: 0 0 auto;
-    width: auto;
-    padding: 0 var(--space-3);
-}
-
-.col-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
-.col-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
-.col-3 { flex: 0 0 25%; max-width: 25%; }
-.col-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
-.col-5 { flex: 0 0 41.666667%; max-width: 41.666667%; }
-.col-6 { flex: 0 0 50%; max-width: 50%; }
-.col-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
-.col-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
-.col-9 { flex: 0 0 75%; max-width: 75%; }
-.col-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-.col-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
-.col-12 { flex: 0 0 100%; max-width: 100%; }
-
-/* Responsive Grid */
-@media (min-width: 640px) {
-    .col-sm-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
-    .col-sm-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
-    .col-sm-3 { flex: 0 0 25%; max-width: 25%; }
-    .col-sm-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
-    .col-sm-5 { flex: 0 0 41.666667%; max-width: 41.666667%; }
-    .col-sm-6 { flex: 0 0 50%; max-width: 50%; }
-    .col-sm-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
-    .col-sm-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
-    .col-sm-9 { flex: 0 0 75%; max-width: 75%; }
-    .col-sm-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-    .col-sm-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
-    .col-sm-12 { flex: 0 0 100%; max-width: 100%; }
-}
-
-@media (min-width: 768px) {
-    .col-md-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
-    .col-md-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
-    .col-md-3 { flex: 0 0 25%; max-width: 25%; }
-    .col-md-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
-    .col-md-5 { flex: 0 0 41.666667%; max-width: 41.666667%; }
-    .col-md-6 { flex: 0 0 50%; max-width: 50%; }
-    .col-md-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
-    .col-md-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
-    .col-md-9 { flex: 0 0 75%; max-width: 75%; }
-    .col-md-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-    .col-md-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
-    .col-md-12 { flex: 0 0 100%; max-width: 100%; }
+/* 2. Sidebar'lı Sayfa Düzeni (Örn: Ürün Listesi) */
+/* Sidebar ve Ana İçerik alanını yönetir. */
+.layout-with-sidebar {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobilde tek kolon (Sidebar üstte veya altta kalır) */
+    gap: var(--space-6);
+    align-items: start; /* İçeriğin yukarıdan başlamasını sağlar */
+    width: 100%; /* Container içine tam oturması için */
 }
 
 @media (min-width: 1024px) {
-    .col-lg-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
-    .col-lg-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
-    .col-lg-3 { flex: 0 0 25%; max-width: 25%; }
-    .col-lg-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
-    .col-lg-5 { flex: 0 0 41.666667%; max-width: 41.666667%; }
-    .col-lg-6 { flex: 0 0 50%; max-width: 50%; }
-    .col-lg-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
-    .col-lg-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
-    .col-lg-9 { flex: 0 0 75%; max-width: 75%; }
-    .col-lg-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-    .col-lg-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
-    .col-lg-12 { flex: 0 0 100%; max-width: 100%; }
+    .layout-with-sidebar {
+        /* Masaüstünde: Sidebar (280px sabit) + İçerik (Kalan alan esnek) */
+        grid-template-columns: 280px 1fr;
+        gap: var(--space-8);
+    }
 }
 
-/* Grid Gap Utilities */
+/* 3. Otomatik Kart Izgarası (Örn: Ürün Kartları) */
+/* Kartları ekran boyutuna göre otomatik olarak yan yana dizer ve alta atar. */
+.grid-cards {
+    display: grid;
+    /* minmax(250px, 1fr): Kartlar en az 250px olacak.
+       auto-fill: Sığabildiği kadar kartı yan yana koy.
+       Bu sayede @media sorgusu yazmadan responsive olur.
+    */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-6);
+}
+
+/* 4. Basit Konteyner Gridleri (Manuel kolon sayısı gereken yerler için) */
+
+/* İki Kolonlu Grid */
+.grid-cols-2 {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobilde 1 kolon */
+    gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+    .grid-cols-2 {
+        grid-template-columns: repeat(2, 1fr); /* Tablet/Masaüstünde 2 kolon */
+    }
+}
+
+/* Üç Kolonlu Grid (Örn: Footer veya Özellikler alanı) */
+.grid-cols-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+    .grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Dört Kolonlu Grid */
+.grid-cols-4 {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobilde 1 */
+    gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr); /* Küçük tablette 2 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-cols-4 {
+        grid-template-columns: repeat(4, 1fr); /* Masaüstünde 4 */
+    }
+}
+
+/* Grid Gap (Boşluk) Yardımcıları */
 .gap-0 { gap: 0; }
 .gap-1 { gap: var(--space-1); }
 .gap-2 { gap: var(--space-2); }
-.gap-3 { gap: var(--space-3); }
 .gap-4 { gap: var(--space-4); }
-.gap-5 { gap: var(--space-5); }
 .gap-6 { gap: var(--space-6); }
 .gap-8 { gap: var(--space-8); }
-
-/* Order Utilities */
-.order-first { order: -1; }
-.order-last { order: 999; }
-.order-none { order: 0; }
-
-/* Offset Utilities */
-.offset-1 { margin-left: 8.333333%; }
-.offset-2 { margin-left: 16.666667%; }
-.offset-3 { margin-left: 25%; }
-.offset-4 { margin-left: 33.333333%; }
-.offset-5 { margin-left: 41.666667%; }
-.offset-6 { margin-left: 50%; }
