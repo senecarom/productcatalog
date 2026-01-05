@@ -5,8 +5,16 @@ const { APP_CONSTANTS, SORT_OPTIONS } = require('../config/constants');
 
 const productController = {
   // Ürün listesi sayfası
+
+  // getProducts (Listeleme Sayfası):
+  // Görevi: Sol menüdeki filtreleri (Kategori, Fiyat, Marka) kullanarak ürünleri listelemektir.
   getProducts: async (req, res) => {
     try {
+      // --- [1. ADIM: İSTEK PARAMETRELERİNİ ALMA (DESTRUCTURING)] ---
+      // GÖREVİ: Kullanıcının URL üzerinden gönderdiği (Query String) filtreleme, sıralama ve sayfa bilgilerini yakalar.
+      // ETKİSİ: "req.query" içindeki dağınık verileri, temiz ve kullanılabilir değişkenlere dönüştürür.
+      // NEDEN KULLANILDI: Kodun okunabilirliğini artırmak ve "page" gibi değişkenlere varsayılan değer (1) atamak için.
+      // KULLANILMASAYDI: Her değişken için "const category = req.query.category" gibi uzun ve tekrar eden kodlar yazmak gerekirdi.
       const {
         category,
         minPrice,
@@ -15,9 +23,13 @@ const productController = {
         inStock,
         brand,
         sort,
-        page = 1
+        page = 1  // Sayfa sayısı belirtilmezse varsayılan olarak 1. sayfayı açar.
       } = req.query;
 
+      // --- [2. ADIM: FİLTRE OBJESİNİ OLUŞTURMA] ---
+      // GÖREVİ: Dağınık haldeki filtre değişkenlerini (category, price vb.) tek bir "filters" kutusunda (Object) toplar.
+      // ETKİSİ: Veritabanı sorgusunu yapacak olan Model katmanına verileri düzenli bir paket halinde göndermeyi sağlar.
+      // ÖNEMLİ DETAY: Burada "search" değişkeni YOKTUR. Çünkü bu sayfa arama sayfası değil, filtreleme sayfasıdır.
       // Filtre objesini oluştur
       const filters = {
         category,
@@ -28,21 +40,36 @@ const productController = {
         brand
       };
 
+      // --- [3. ADIM: SIRALAMA AYARINI BELİRLEME] ---
+      // GÖREVİ: Kullanıcının "price_low" gibi insan dilindeki isteğini, veritabanının anlayacağı "{ field: 'price', order: 1 }" formatına çevirir.
+      // ETKİSİ: Ürünlerin hangi sırayla (ucuzdan pahalıya, yeniden eskiye) listeleneceğini belirler.
+      // NEDEN KULLANILDI: Kullanıcı hatalı bir sıralama parametresi (örn: ?sort=kafamagore) gönderirse sistemin çökmemesi için güvenlik kontrolü yapar.
       // Sıralama seçeneği
+      // 1. Varsayılan (Default) değeri ata
       let sortOption = SORT_OPTIONS.NEWEST;
+      // 2. Kontrol et ve varsa değiştir
       if (sort && SORT_OPTIONS[sort.toUpperCase()]) {
         sortOption = SORT_OPTIONS[sort.toUpperCase()];
       }
 
+      // --- [4. ADIM: SAYFALAMA AYARLARINI HAZIRLAMA] ---
+      // GÖREVİ: Hangi sayfada olduğumuzu ve bir sayfada kaç ürün gösterileceğini hesaplar.
+      // ETKİSİ: Veritabanına "İlk X ürünü atla (skip), sonraki Y ürünü getir (limit)" gibi emirler vermek için kullanılır.
+      // NEDEN KULLANILDI: Tüm ürünleri tek seferde çekmek yerine parça parça çekerek sayfa yüklenme hızını artırmak için.
       // Sayfalama
       const pagination = {
-        page: parseInt(page),
+        // String'i sayıya çevir, eğer saçma bir şeyse (NaN) 1 kabul et.
+        page: parseInt(page) > 0 ? parseInt(page) : 1,
         limit: APP_CONSTANTS.ITEMS_PER_PAGE
       };
 
+      // --- [5. ADIM: VERİTABANINDAN VERİ ÇEKME (MODEL ÇAĞRISI)] ---
+      // GÖREVİ: Hazırlanan filtre, sıralama ve sayfa paketlerini Model'e (Product.js) teslim eder.
+      // ETKİSİ: Veritabanı (MongoDB) ile asıl iletişim burada kurulur. Sorgu çalıştırılır ve gerçek veriler gelir.
+      // "await": Veritabanı işlemi asenkron olduğu için, cevap gelene kadar kodun burada beklemesini sağlar.
       // Ürünleri getir
       const result = await Product.getAll(filters, sortOption, pagination);
-      
+
       // HATA 4 DÜZELTMESİ: Kategori verisi 'res.locals' aracılığıyla zaten mevcut.
       // const categories = await Category.getAll();
 
@@ -70,6 +97,8 @@ const productController = {
   },
 
   // Arama sonuçları
+  // searchProducts (Arama Sayfası):
+  // Görevi: Kullanıcı üstteki arama çubuğuna bir şey yazıp "Ara" dediğinde çalışır.
   searchProducts: async (req, res) => {
     try {
       const { q: searchQuery, page = 1, sort } = req.query; // Sort parametresi eklendi
@@ -78,8 +107,10 @@ const productController = {
         return res.redirect('/products');
       }
 
+      // ÖNEMLİ FARK: Burada "filters" paketinin içine "search" değişkenini koyuyoruz!
+      // Bu sayede Model'deki "if (search)" bloğu devreye girecek.
       const filters = { search: searchQuery };
-      
+
       // DÜZELTME: Arama yaparken de sıralama seçeneklerini dikkate al
       let sortOption = SORT_OPTIONS.NEWEST;
       if (sort && SORT_OPTIONS[sort.toUpperCase()]) {
@@ -105,7 +136,7 @@ const productController = {
         pagination: result.pagination,
         searchQuery,
         filters, // Filtrelerin arama sayfasında da korunması için
-        brands, 
+        brands,
         // categories, // Kaldırıldı
         sortOptions: SORT_OPTIONS, // DÜZELTİLDİ: Sidebar için gerekli
         currentSort: sort || 'newest', // DÜZELTİLDİ: Sidebar için gerekli
@@ -126,7 +157,7 @@ const productController = {
       const { id } = req.params;
 
       const product = await Product.getById(id);
-      
+
       if (!product) {
         return res.status(404).render('pages/error', {
           title: 'Ürün Bulunamadı',
